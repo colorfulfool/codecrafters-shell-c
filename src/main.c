@@ -19,6 +19,16 @@ void loop() {
     return loop();
   }
 
+  if (strncmp(statement, "type ", 5) == 0) {
+    char* arg = statement + 5;
+    if (strcmp(arg, "exit") == 0 || strcmp(arg, "echo") == 0 || strcmp(arg, "type") == 0) {
+      printf("%s is a shell builtin\n", arg);
+    } else {
+      printf("%s: not found\n", arg);
+    }
+    return loop();
+  }
+
   printf("%s: command not found\n", statement);
   return loop();
 }
