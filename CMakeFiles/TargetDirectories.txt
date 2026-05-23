@@ -1,3 +1,0 @@
-/home/colorfulfool/Learning/codecrafters-shell-c/CMakeFiles/shell.dir
-/home/colorfulfool/Learning/codecrafters-shell-c/CMakeFiles/edit_cache.dir
-/home/colorfulfool/Learning/codecrafters-shell-c/CMakeFiles/rebuild_cache.dir
