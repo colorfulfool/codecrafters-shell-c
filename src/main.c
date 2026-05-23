@@ -1,6 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
+char* find_executable(char* command) {
+  char* start = getenv("PATH");
+
+  while (*start) {
+    char* end = strchr(start, ':');
+
+    if (end == NULL) {
+      return NULL;
+    }
+
+    char* filepath = malloc(256);
+    memcpy(filepath, start, (end - start));
+    filepath[end - start] = '/';
+    memcpy(filepath + (end - start) + 1, command, strlen(command) * sizeof(char));
+
+    if (access(filepath, X_OK) == 0) {
+      return filepath;
+    }  
+
+    start = end + 1;
+  } 
+}
 
 void loop() {
   printf("$ ");
@@ -24,7 +48,12 @@ void loop() {
     if (strcmp(arg, "exit") == 0 || strcmp(arg, "echo") == 0 || strcmp(arg, "type") == 0) {
       printf("%s is a shell builtin\n", arg);
     } else {
-      printf("%s: not found\n", arg);
+      char* executable = find_executable(arg);
+      if (executable) {
+        printf("%s is %s\n", arg, executable);
+      } else {
+        printf("%s: not found\n", arg);
+      }
     }
     return loop();
   }
