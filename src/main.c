@@ -94,11 +94,11 @@ char* extract_command(char* statement) {
   strcpy(command, statement);
 
   if (*command == '\'') {
-    command = command + 1;
-    strtok(command, "'");
+    char *closing = strchr(command + 1, '\'');
+    *(closing + 1) = '\0';
   } else if (*command == '"') {
-    command = command + 1;
-    strtok(command, "\"");
+    char *closing = strchr(command + 1, '"');
+    *(closing + 1) = '\0';
   } else {
     strtok(command, " ");
   }
@@ -163,7 +163,8 @@ void loop() {
     return loop();
   }
 
-  char* command = extract_command(statement);
+  char* quoted_command = extract_command(statement);
+  char* command = unquote(quoted_command);
   char* executable = find_executable(command);
   if (executable) {
     system(statement);
@@ -172,6 +173,7 @@ void loop() {
   }
   free(executable);
   free(command);
+  free(quoted_command);
 
   return loop();
 }
