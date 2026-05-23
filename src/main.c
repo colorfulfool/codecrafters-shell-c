@@ -50,7 +50,7 @@ char* unquote(char* input) {
       }
       inside_space = false;
     } else if (*input == '"') {
-      if (is_escaped) {
+      if (is_escaped || inside_single_quotes) {
         *output = *input; 
         output += 1;
 
@@ -68,7 +68,7 @@ char* unquote(char* input) {
         is_escaped = false;
       }
     } else if (*input == '\\') {
-      if (is_escaped) {
+      if (is_escaped || inside_single_quotes) {
         *output = *input; 
         output += 1;
 
