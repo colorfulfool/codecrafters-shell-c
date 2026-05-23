@@ -89,6 +89,23 @@ char* unquote(char* input) {
   return output_start;
 }
 
+char* extract_command(char* statement) {
+  char* command = malloc(STATEMENT_LEN);
+  strcpy(command, statement);
+
+  if (*command == '\'') {
+    command = command + 1;
+    strtok(command, "'");
+  } else if (*command == '"') {
+    command = command + 1;
+    strtok(command, "\"");
+  } else {
+    strtok(command, " ");
+  }
+
+  return command;
+}
+
 void loop() {
   printf("$ ");
 
@@ -113,7 +130,9 @@ void loop() {
   }
 
   if (strncmp(statement, "echo ", 5) == 0) {
-    puts(unquote(statement + 5));
+    char* args = unquote(statement + 5);
+    puts(args);
+    free(args);
     return loop();
   }
 
@@ -144,24 +163,15 @@ void loop() {
     return loop();
   }
 
-  char *space_pos = strchr(statement, ' ');
-
-  char* command;
-  if (space_pos) {
-    int command_len = space_pos - statement;
-    command = malloc(command_len);
-    memcpy(command, statement, command_len);
-  } else {
-    command = statement;
-  }
-
+  char* command = extract_command(statement);
   char* executable = find_executable(command);
   if (executable) {
     system(statement);
   } else {
-    printf("%s: command not found\n", statement);
+    printf("%s: command not found\n", command);
   }
   free(executable);
+  free(command);
 
   return loop();
 }
