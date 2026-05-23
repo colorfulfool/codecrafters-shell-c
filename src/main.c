@@ -6,5 +6,10 @@ int main(int argc, char *argv[]) {
 
   printf("$ ");
 
+  char statement[256];
+  scanf("%s", &statement);
+
+  printf("%s: command not found\n", statement);
+
   return 0;
 }

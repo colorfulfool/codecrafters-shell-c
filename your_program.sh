@@ -1,25 +1,35 @@
 #!/bin/sh
-#
-# Use this script to run your program LOCALLY.
-#
-# Note: Changing this script WILL NOT affect how CodeCrafters runs your program.
-#
-# Learn more: https://codecrafters.io/program-interface
+set -e
 
-set -e # Exit early if any commands fail
-
-# Copied from .codecrafters/compile.sh
-#
-# - Edit this to change how your program compiles locally
-# - Edit .codecrafters/compile.sh to change how your program compiles remotely
+# ================================================
+# Compile
+# ================================================
 (
-  cd "$(dirname "$0")" # Ensure compile steps are run within the repository directory
-  cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
-  cmake --build ./build
+  cd "$(dirname "$0")"
+
+  # Set VCPKG_ROOT if not already set
+  if [ -z "${VCPKG_ROOT}" ]; then
+    if [ -d "$HOME/vcpkg" ]; then
+      export VCPKG_ROOT="$HOME/vcpkg"
+    elif [ -d "/usr/local/vcpkg" ]; then
+      export VCPKG_ROOT="/usr/local/vcpkg"
+    else
+      echo "Error: VCPKG_ROOT is not set and vcpkg not found in default locations."
+      echo "Please run: export VCPKG_ROOT=~/vcpkg   (or wherever you installed it)"
+      exit 1
+    fi
+  fi
+
+  echo "Using VCPKG_ROOT: $VCPKG_ROOT"
+
+  cmake -B build -S . \
+    -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
+    -DCMAKE_BUILD_TYPE=Release
+
+  cmake --build ./build --config Release
 )
 
-# Copied from .codecrafters/run.sh
-#
-# - Edit this to change how your program runs locally
-# - Edit .codecrafters/run.sh to change how your program runs remotely
-exec $(dirname "$0")/build/shell "$@"
+# ================================================
+# Run
+# ================================================
+exec "$(dirname "$0")/build/shell" "$@"
