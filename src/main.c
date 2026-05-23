@@ -58,11 +58,11 @@ void loop() {
   }
 
   if (strncmp(statement, "cd ", 3) == 0) {
-    char* dir = statement + 5;
+    char* dir = statement + 3;
     if (access(dir, F_OK) == 0) {
-      chdir(statement + 3);
+      chdir(dir);
     } else {
-      printf("%s: No such file or directory\n");
+      printf("%s: No such file or directory\n", dir);
     }
     return loop();
   }
