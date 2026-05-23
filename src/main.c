@@ -39,7 +39,12 @@ char* unquote(char* input) {
 
   while (*input) {
     if (*input == '\'') {
-      inside_single_quotes = !inside_single_quotes;
+      if (inside_double_quotes) {
+        *output = *input; 
+        output += 1;
+      } else {
+        inside_single_quotes = !inside_single_quotes;
+      }
       inside_space = false;
     } else if (*input == '"') {
       inside_double_quotes = !inside_double_quotes;
