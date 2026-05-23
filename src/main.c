@@ -34,12 +34,24 @@ char* unquote(char* input) {
   char *output = output_start;
 
   bool inside_quotes = false;
+  bool inside_space = false;
+
   while (*input) {
     if (*input == '\'') {
       inside_quotes = !inside_quotes;
+      inside_space = false;
+    } else if (*input == ' ') {
+      if (!inside_space || inside_quotes) {
+        *output = *input; 
+        output += 1;
+
+        inside_space = true;
+      }
     } else {
       *output = *input; 
       output += 1;
+
+      inside_space = false;
     }
 
     input += 1;
