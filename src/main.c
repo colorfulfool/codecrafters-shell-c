@@ -36,12 +36,15 @@ char* unquote(char* input) {
   bool inside_single_quotes = false;
   bool inside_double_quotes = false;
   bool inside_space = false;
+  bool is_escaped = false;
 
   while (*input) {
     if (*input == '\'') {
-      if (inside_double_quotes) {
+      if (inside_double_quotes || is_escaped) {
         *output = *input; 
         output += 1;
+
+        is_escaped = false;
       } else {
         inside_single_quotes = !inside_single_quotes;
       }
@@ -50,11 +53,21 @@ char* unquote(char* input) {
       inside_double_quotes = !inside_double_quotes;
       inside_space = false;
     } else if (*input == ' ') {
-      if (!inside_space || inside_single_quotes || inside_double_quotes) {
+      if (!inside_space || inside_single_quotes || inside_double_quotes || is_escaped) {
         *output = *input; 
         output += 1;
 
         inside_space = true;
+        is_escaped = false;
+      }
+    } else if (*input == '\\') {
+      if (is_escaped) {
+        *output = *input; 
+        output += 1;
+
+        is_escaped = false;
+      } else {
+        is_escaped = true;
       }
     } else {
       *output = *input; 
