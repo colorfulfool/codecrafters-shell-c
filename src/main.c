@@ -50,8 +50,15 @@ char* unquote(char* input) {
       }
       inside_space = false;
     } else if (*input == '"') {
-      inside_double_quotes = !inside_double_quotes;
-      inside_space = false;
+      if (is_escaped) {
+        *output = *input; 
+        output += 1;
+
+        is_escaped = false;
+      } else {
+        inside_double_quotes = !inside_double_quotes;
+        inside_space = false;
+      }
     } else if (*input == ' ') {
       if (!inside_space || inside_single_quotes || inside_double_quotes || is_escaped) {
         *output = *input; 
