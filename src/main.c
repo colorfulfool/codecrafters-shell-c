@@ -58,20 +58,25 @@ void loop() {
   }
 
   if (strncmp(statement, "cd ", 3) == 0) {
-    chdir(statement + 3);
+    char* dir = statement + 5;
+    if (access(dir, F_OK) == 0) {
+      chdir(statement + 3);
+    } else {
+      printf("%s: No such file or directory\n");
+    }
     return loop();
   }
 
   if (strncmp(statement, "type ", 5) == 0) {
-    char* arg = statement + 5;
-    if (strcmp(arg, "exit") == 0 || strcmp(arg, "echo") == 0 || strcmp(arg, "type") == 0 || strcmp(arg, "pwd") == 0) {
-      printf("%s is a shell builtin\n", arg);
+    char* command = statement + 5;
+    if (strcmp(command, "exit") == 0 || strcmp(command, "echo") == 0 || strcmp(command, "type") == 0 || strcmp(command, "pwd") == 0) {
+      printf("%s is a shell builtin\n", command);
     } else {
-      char* executable = find_executable(arg);
+      char* executable = find_executable(command);
       if (executable) {
-        printf("%s is %s\n", arg, executable);
+        printf("%s is %s\n", command, executable);
       } else {
-        printf("%s: not found\n", arg);
+        printf("%s: not found\n", command);
       }
       free(executable);
     }
