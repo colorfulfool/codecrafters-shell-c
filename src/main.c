@@ -33,15 +33,19 @@ char* unquote(char* input) {
   char *output_start = malloc(strlen(input));
   char *output = output_start;
 
-  bool inside_quotes = false;
+  bool inside_single_quotes = false;
+  bool inside_double_quotes = false;
   bool inside_space = false;
 
   while (*input) {
     if (*input == '\'') {
-      inside_quotes = !inside_quotes;
+      inside_single_quotes = !inside_single_quotes;
+      inside_space = false;
+    } else if (*input == '"') {
+      inside_double_quotes = !inside_double_quotes;
       inside_space = false;
     } else if (*input == ' ') {
-      if (!inside_space || inside_quotes) {
+      if (!inside_space || inside_single_quotes || inside_double_quotes) {
         *output = *input; 
         output += 1;
 
