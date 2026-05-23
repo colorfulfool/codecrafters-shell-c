@@ -8,12 +8,14 @@ void loop() {
   char statement[256];
   fgets(statement, 256, stdin);
 
+  statement[strlen(statement)-1] = 0;
+
   if (strcmp(statement, "exit") == 0) {
     return;
   }
 
   if (strncmp(statement, "echo ", 5) == 0) {
-    printf("%s", statement + 5);
+    printf("%s\n", statement + 5);
     return loop();
   }
 
