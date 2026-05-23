@@ -57,6 +57,11 @@ void loop() {
     return loop();
   }
 
+  if (strncmp(statement, "cd ", 3) == 0) {
+    chdir(statement + 3);
+    return loop();
+  }
+
   if (strncmp(statement, "type ", 5) == 0) {
     char* arg = statement + 5;
     if (strcmp(arg, "exit") == 0 || strcmp(arg, "echo") == 0 || strcmp(arg, "type") == 0 || strcmp(arg, "pwd") == 0) {
