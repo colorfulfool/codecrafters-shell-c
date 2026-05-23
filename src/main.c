@@ -59,13 +59,20 @@ void loop() {
     return loop();
   }
 
-  int command_len = strchr(statement, ' ') - statement;
-  char* command = malloc(command_len);
-  memcpy(command, statement, command_len);
+  char *space_pos = strchr(statement, ' ');
+
+  char* command;
+  if (space_pos) {
+    int command_len = space_pos - statement;
+    command = malloc(command_len);
+    memcpy(command, statement, command_len);
+  } else {
+    command = statement;
+  }
 
   char* executable = find_executable(command);
   if (executable) {
-    system(statement);  
+    system(statement);
   } else {
     printf("%s: command not found\n", statement);
   }
