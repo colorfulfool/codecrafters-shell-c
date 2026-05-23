@@ -59,6 +59,9 @@ void loop() {
 
   if (strncmp(statement, "cd ", 3) == 0) {
     char* dir = statement + 3;
+    if (strcmp(dir, "~") == 0) {
+      dir = getenv("HOME");
+    }
     if (chdir(dir) != 0) {
       printf("%s: No such file or directory\n", dir);
     }
