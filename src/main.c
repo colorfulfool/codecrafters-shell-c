@@ -29,13 +29,32 @@ char* find_executable(char* command) {
   } 
 }
 
+char* unquote(char* input) {
+  char *output_start = malloc(strlen(input));
+  char *output = output_start;
+
+  bool inside_quotes = false;
+  while (*input) {
+    if (*input == '\'') {
+      inside_quotes = !inside_quotes;
+    } else {
+      *output = *input; 
+      output += 1;
+    }
+
+    input += 1;
+  }
+
+  return output_start;
+}
+
 void loop() {
   printf("$ ");
 
   char statement[STATEMENT_LEN];
   fgets(statement, STATEMENT_LEN, stdin);
 
-  statement[strlen(statement)-1] = 0;
+  statement[strlen(statement)-1] = 0; // remove newline
 
   if (strcmp(statement, "exit") == 0) {
     return;
@@ -53,7 +72,7 @@ void loop() {
   }
 
   if (strncmp(statement, "echo ", 5) == 0) {
-    puts(statement + 5);
+    puts(unquote(statement + 5));
     return loop();
   }
 
