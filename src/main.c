@@ -133,13 +133,12 @@ void loop() {
   }
 
   if (strcmp(statement, "pwd") == 0) {
-    char* cwd = malloc(PATH_LEN);
+    char cwd[PATH_LEN];
     if (getcwd(cwd, PATH_LEN) == NULL) {
       puts("getcwd overflow");
       exit(1);
     }
     puts(cwd);
-    free(cwd);
     return loop();
   }
 
