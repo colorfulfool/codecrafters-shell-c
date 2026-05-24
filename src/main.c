@@ -179,8 +179,10 @@ void loop() {
   return loop();
 }
 
+#ifndef TESTING
 int main(int argc, char *argv[]) {
   setbuf(stdout, NULL);
   loop();
   return 0;
 }
+#endif
