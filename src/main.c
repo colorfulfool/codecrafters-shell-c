@@ -90,21 +90,34 @@ char* unquote(char* input) {
   return output_start;
 }
 
+char* cut_after(char* text, char symbol) {
+  char* closing = strchr(text + 1, symbol);
+  int closing_pos = closing - text;
+  char* result = malloc(closing_pos + 2);
+  memcpy(result, text, closing_pos + 1);
+  result[closing_pos + 1] = '\0';
+  return result;
+}
+
+char* cut_at(char* text, char symbol) {
+  char* closing = strchr(text, symbol);
+  int closing_pos = closing - text;
+  char* result = malloc(closing_pos + 1);
+  memcpy(result, text, closing_pos);
+  result[closing_pos] = '\0';
+  return result;
+}
+
 char* extract_command(char* statement) {
-  char* command = malloc(STATEMENT_LEN);
-  strcpy(command, statement);
+  if (*statement == '\'') {
+    return cut_after(statement, '\'');
+  } 
 
-  if (*command == '\'') {
-    char *closing = strchr(command + 1, '\'');
-    *(closing + 1) = '\0';
-  } else if (*command == '"') {
-    char *closing = strchr(command + 1, '"');
-    *(closing + 1) = '\0';
-  } else {
-    strtok(command, " ");
-  }
+  if (*statement == '"') {
+    return cut_after(statement, '"');
+  } 
 
-  return command;
+  return cut_at(statement, ' ');
 }
 
 void loop() {
