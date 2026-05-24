@@ -19,7 +19,7 @@ char* find_executable(char* command) {
     char* filepath = malloc(PATH_LEN);
     memcpy(filepath, start, (end - start));
     filepath[end - start] = '/';
-    memcpy(filepath + (end - start) + 1, command, strlen(command) * sizeof(char));
+    memcpy(filepath + (end - start) + 1, command, strlen(command) * sizeof(char) + 1);
 
     if (access(filepath, X_OK) == 0) {
       return filepath;
@@ -30,7 +30,7 @@ char* find_executable(char* command) {
 }
 
 char* unquote(char* input) {
-  char *output_start = malloc(strlen(input));
+  char *output_start = malloc(strlen(input) + 1);
   char *output = output_start;
 
   bool inside_single_quotes = false;
@@ -86,6 +86,7 @@ char* unquote(char* input) {
     input += 1;
   }
 
+  *output = '\0';
   return output_start;
 }
 
